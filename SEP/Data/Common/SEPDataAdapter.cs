@@ -1,40 +1,37 @@
-﻿using System;
+﻿using SEP.Data.Client;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace SEP.Data.Common
 {
-    public class SEPDataAdapter
+    public class SEPDataAdapter : ISEPDataAdapter
     {
-        private DbConnection dbConn;
-        private string cmdText;
+        private ISEPDataProvider sepDP = null;
+        private DbConnection dbConn = null;
+        private string query = string.Empty;
 
-        public SEPDataAdapter()
+        public SEPDataAdapter(ISEPDataProvider sepDP)
         {
-            this.cmdText = string.Empty;
-            this.dbConn = null;
+            this.sepDP = sepDP;
         }
-
-        public SEPDataAdapter(SEPConnection connection)
+        public SEPDataAdapter(ISEPConnection sepConn, ISEPDataProvider sepDP)
         {
-            this.cmdText = string.Empty;
-            this.dbConn = connection.CreateConnection();
+            this.sepDP = sepDP;
+            this.dbConn = sepConn.CreateConnection(sepDP);
         }
-
-        public SEPDataAdapter(string commandText, SEPConnection connection)
+        public SEPDataAdapter(string query, ISEPConnection sepConn, ISEPDataProvider sepDP)
         {
-            this.cmdText = commandText;
-            this.dbConn = connection.CreateConnection();
+            this.query = query;
+            this.sepDP = sepDP;
+            this.dbConn = sepConn.CreateConnection(sepDP);
         }
         
         public DbDataAdapter CreateDataAdapter()
         {
-            return SEPDataProvider.Factory().CreateDataAdapter();
+            return this.sepDP == null
+                ? throw new System.Exception("SEPDataProvider is not instantialize!")
+                : this.sepDP.Factory().CreateDataAdapter();
         }
 
         public List<string> GetListTableName()
@@ -64,7 +61,7 @@ namespace SEP.Data.Common
             }
 
             DbCommand cmd = dbConn.CreateCommand();
-            cmd.CommandText = this.cmdText;
+            cmd.CommandText = this.query;
 
             DataTable table = new DataTable();
             DbDataAdapter adapter = this.CreateDataAdapter();

@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Data.ConnectionUI;
+using SEP.Data.Client;
 using SEP.Data.Common;
-using SEP.Forms;
+using SEP.Data.Utilities;
 
-namespace DemoClient
+namespace SEP.Forms
 {
-    public partial class FrmDemo : Form
+    public partial class FormMain : Form, IFormMain
     {
-        public FrmDemo()
+        public FormMain()
         {
             InitializeComponent();
         }
@@ -23,31 +19,41 @@ namespace DemoClient
         // declare (1)
         DataConnectionDialog dcd = new DataConnectionDialog();
         BindingSource bs = new BindingSource();
-        SEPDataProvider provider = null;
-        SEPConnection conn = null;
-        
-        private void MainForm_Load(object sender, EventArgs e)
+        ISEPDataProvider provider = null;
+        ISEPConnection conn = null;
+        ISEPDataAdapter sepAdapter = null;
+        ISQLQuery query = null;
+        ISEPCommand cmd = null;
+        ISEPDataRow sepRow = null;
+
+        public void MainForm_Load(object sender, EventArgs e)
         {
             // define (1.1)
             DataSource.AddStandardDataSources(dcd);
 
+            // Show Connection Dialog
             if (DataConnectionDialog.Show(dcd) == DialogResult.OK)
             {
                 // define (1.1)
-                provider = SEPDataProvider.Instance(dcd.SelectedDataProvider.Name);
-                conn = new SEPConnection(dcd.ConnectionString);
+                this.provider = SEPDataProvider.Instance;
+                this.provider.SetName(dcd.SelectedDataProvider.Name);
+                this.conn = SEPConnection.Instance;
+                this.conn.SetPath(dcd.ConnectionString);
 
                 // get list name of tables in database
-                SEPDataAdapter da = new SEPDataAdapter(conn);
-                this.cbbTableName.DataSource = da.GetListTableName();
+                this.sepAdapter = new SEPDataAdapter(this.conn, this.provider);
+                this.cbbTableName.DataSource = sepAdapter.GetListTableName();
 
                 // set default for combobox
                 this.cbbTableName.SelectedIndex = 0;
-                da = new SEPDataAdapter($"select * from {this.cbbTableName.SelectedItem.ToString()}", conn);
+                this.query = new SQLQuery(this.cbbTableName.SelectedItem.ToString());
+                this.sepAdapter = new SEPDataAdapter(this.query.Select(), this.conn, this.provider);
 
                 // view DataTable with BindingSource
-                this.bs.DataSource = da.GetTable();
+                this.bs.DataSource = this.sepAdapter.GetTable();
                 this.dgvDataTable.DataSource = this.bs.DataSource;
+
+                // hidden id column
                 this.dgvDataTable.Columns[0].Visible = false;
             }
             else
@@ -56,59 +62,64 @@ namespace DemoClient
             }
         }
 
-        private void cbbTableName_SelectedIndexChanged(object sender, EventArgs e)
+        public void cbbTableName_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SEPDataAdapter da = new SEPDataAdapter($"select * from {this.cbbTableName.SelectedItem.ToString()}", conn);
+            // select * from table
+            this.query = new SQLQuery(this.cbbTableName.SelectedItem.ToString());
+            this.sepAdapter = new SEPDataAdapter(this.query.Select(), this.conn, this.provider);
 
-            this.bs.DataSource = da.GetTable();
+            // binding source
+            this.bs.DataSource = this.sepAdapter.GetTable();
             this.dgvDataTable.DataSource = this.bs.DataSource;
         }
 
-        private void dgvDataTable_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        public void dgvDataTable_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            FormBase frm = new UpdateForm(new SEPDataRow(this.dgvDataTable));
+            // update bindingSource
+            this.bs.Position = e.RowIndex;
+
+            this.sepRow = new SEPDataRow(this.dgvDataTable);
+            FormBase frm = new FormUpdate(this.sepRow);
             frm.OnHandle += Frm_OnUpdateAsync;
             frm.ShowDialog();
         }
 
-        private void btnAdd_Click(object sender, EventArgs e)
+        public void btnAdd_Click(object sender, EventArgs e)
         {
             // assign selection for datagridview
             this.dgvDataTable.CurrentCell = this.dgvDataTable[1, 0];
-            FormBase frm = new CreateForm(new SEPDataRow(this.dgvDataTable));
+
+            // handle form
+            this.sepRow = new SEPDataRow(this.dgvDataTable);
+            FormBase frm = new FormCreate(this.sepRow);
             frm.OnHandle += Frm_OnCreateAsync;
             frm.ShowDialog();
         }
 
-        private async void Frm_OnUpdateAsync(SEPDataRow sepRow)
+        public async void Frm_OnUpdateAsync(ISEPDataRow dRow)
         {
-            string sql = $"update {this.cbbTableName.SelectedItem.ToString()}" +
-                $" set {SEPParameters.GetEntity(sepRow)}" +
-                $" where {SEPParameters.GetCondition(sepRow)}";
-            // deploy sql
-            SEPCommand cmd = new SEPCommand(sql, this.conn);
+            this.query = new SQLQuery(this.cbbTableName.SelectedItem.ToString());
+            this.cmd = new SEPCommand(this.query.Update(sepRow), this.conn, this.provider);
             
-            if (await cmd.Update() < 0)
+            if (await this.cmd.Update() < 0)
             {
                 MessageBox.Show("Cap nhat du lieu khong thanh cong.");
             }
             else
             {
+                // update DataGridView again
                 DataRowView rowView = (DataRowView)bs.Current;
-                ConvertToDataRowView(rowView, sepRow);
+                ConvertToDataRowView(rowView, dRow);
                 this.dgvDataTable.Refresh();
 
                 MessageBox.Show("Cap nhat thanh cong.");
             }
         }
 
-        private async void Frm_OnCreateAsync(SEPDataRow sepRow)
+        public async void Frm_OnCreateAsync(ISEPDataRow dRow)
         {
-            string sql = $"insert into {this.cbbTableName.SelectedItem.ToString()}" +
-                $" ({SEPParameters.GetListPropertyName(sepRow)})" +
-                $" values ({SEPParameters.GetListValue(sepRow)})";
-            // deploy sql
-            SEPCommand cmd = new SEPCommand(sql, this.conn);
+            this.query = new SQLQuery(this.cbbTableName.SelectedItem.ToString());
+            this.cmd = new SEPCommand(this.query.Insert(sepRow), this.conn, this.provider);
 
             if (await cmd.Insert() < 0)
             {
@@ -116,9 +127,10 @@ namespace DemoClient
             }
             else
             {
+                // update DataGridView again
                 DataTable dt = (DataTable)bs.DataSource;
                 DataRow row = dt.NewRow();
-                ConvertToDataRow(row, sepRow);
+                ConvertToDataRow(row, dRow);
                 dt.Rows.Add(row);
 
                 MessageBox.Show("Them moi thanh cong.");
@@ -126,18 +138,15 @@ namespace DemoClient
 
         }
 
-        private async void btnRemove_ClickAsync(object sender, EventArgs e)
+        public async void btnRemove_ClickAsync(object sender, EventArgs e)
         {
             if (MessageBox.Show("Bạn có chắc chắn muôn xóa bản ghi đang chọn không?", "Thông báo",MessageBoxButtons.YesNo) == DialogResult.No)
             {
                 return;
             }
-
-            int id = Convert.ToInt32(this.dgvDataTable.CurrentRow.Cells[0].Value);
-            string sql = $"delete from {this.cbbTableName.SelectedItem.ToString()}" +
-                $" where {this.dgvDataTable.Columns[0].Name} = {id}";
-            // deploy sql
-            SEPCommand cmd = new SEPCommand(sql, this.conn);
+            
+            this.query = new SQLQuery(this.cbbTableName.SelectedItem.ToString());
+            this.cmd = new SEPCommand(this.query.Delete(this.sepRow), this.conn, this.provider);
 
             if (await cmd.Delete() < 0)
             {
@@ -145,6 +154,7 @@ namespace DemoClient
             }
             else
             {
+                // update DataGridView again
                 DataRowView row = (DataRowView)bs.Current;
                 row.Delete();
 
@@ -152,12 +162,12 @@ namespace DemoClient
             }
         }
 
-        private void btnExit_Click(object sender, EventArgs e)
+        public void btnExit_Click(object sender, EventArgs e)
         {
             Environment.Exit(0);
         }
 
-        public void ConvertToDataRow(DataRow row, SEPDataRow sepRow)
+        public void ConvertToDataRow(DataRow row, ISEPDataRow sepRow)
         {
             foreach (KeyValuePair<string, object> item in sepRow.Dictionary)
             {
@@ -170,7 +180,7 @@ namespace DemoClient
             }
         }
 
-        public void ConvertToDataRowView(DataRowView rowView, SEPDataRow sepRow)
+        public void ConvertToDataRowView(DataRowView rowView, ISEPDataRow sepRow)
         {
             foreach (KeyValuePair<string, object> item in sepRow.Dictionary)
             {
@@ -182,5 +192,6 @@ namespace DemoClient
                 rowView[item.Key] = item.Value;
             }
         }
+
     }
 }

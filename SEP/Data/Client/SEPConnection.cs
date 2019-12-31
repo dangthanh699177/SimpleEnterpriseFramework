@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.ConnectionUI;
+using SEP.Data.Common;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -8,24 +9,36 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SEP.Data.Common
+namespace SEP.Data.Client
 {
-    public class SEPConnection
+    public class SEPConnection : ISEPConnection
     {
-        private string path;
-
-        public SEPConnection(string path)
+        public static string path;
+        private static SEPConnection instance;
+        private SEPConnection() { }
+        public static SEPConnection Instance
         {
-            this.path = path;
+            get {
+                if (instance == null)
+                {
+                    instance = new SEPConnection();
+                }
+                return instance;
+            }
         }
 
-        public DbConnection CreateConnection()
+        public void SetPath(string newPath)
+        {
+            path = newPath;
+        }
+
+        public DbConnection CreateConnection(ISEPDataProvider sepDataProvider)
         {
             if (path == String.Empty || path == null)
             {
                 throw new Exception("string DataConnectionDialog.ConnectionString is not right!");
             }
-            DbConnection dbConn = SEPDataProvider.Factory().CreateConnection();
+            DbConnection dbConn = sepDataProvider.Factory().CreateConnection();
             dbConn.ConnectionString = path;
             return dbConn;
         }

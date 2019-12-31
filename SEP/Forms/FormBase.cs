@@ -11,17 +11,15 @@ using System.Windows.Forms;
 
 namespace SEP.Forms
 {
-    public abstract partial class FormBase : Form
+    public abstract partial class FormBase : Form, IFormBase
     {
         // some properties
-        protected SEPDataRow row = null;
-        protected SEPDataRow listTextBox = new SEPDataRow();
-
-        //System.Timers.Timer STimer;
-        private int y = 20;
+        protected ISEPDataRow row = null;
+        protected ISEPDataRow listTextBox = new SEPDataRow();
+        protected int y = 20;
 
         // some Events
-        public delegate void FormHandler(SEPDataRow row);
+        public delegate void FormHandler(ISEPDataRow row);
         public event FormHandler OnHandle = null;
 
         // some constructors
@@ -30,14 +28,14 @@ namespace SEP.Forms
             InitializeComponent();
         }
 
-        public FormBase(SEPDataRow dRow)
+        public FormBase(ISEPDataRow dRow)
         {
             this.row = dRow;
             InitializeComponent();
         }
 
         // some definitions
-        protected void InitializeFormContent(string frmName, string btnName)
+        public void InitializeFormContent(string frmName, string btnName)
         {
             this.Text = frmName;
             this.button1.Text = btnName;
@@ -45,7 +43,7 @@ namespace SEP.Forms
             InitializeInputScope();
         }
 
-        protected void InitializeInputScope()
+        public void InitializeInputScope()
         {
             Label lb = null;
             TextBox tbox = null;
@@ -77,16 +75,21 @@ namespace SEP.Forms
                 tbox = new TextBox();
                 tbox.Name = "tb" + item.Key;
                 tbox.Width = 180;
-                lb.Margin = Padding.Empty;
-                lb.Padding = Padding.Empty;
+                tbox.Margin = Padding.Empty;
+                tbox.Padding = Padding.Empty;
                 tbox.Location = new Point(120, y);
+
+                if (item.Key.ToLower() == "password")
+                {
+                    tbox.PasswordChar = '*';
+                }
 
                 // assign TextBox into SEPDataRow for storing, using intermediary object
                 this.listTextBox.Add(item.Key, tbox);
 
                 // case UpdateForm:
                 // show content of TextBox
-                tbox.Text = GetTextTBox(item.Value);
+                tbox.Text = InitTextBoxContent(item.Value);
 
                 this.panel1.Controls.Add(tbox);
                 y += 25;
@@ -94,17 +97,17 @@ namespace SEP.Forms
             
         }
 
-        protected virtual string GetTextTBox(object value)
+        public virtual string InitTextBoxContent(object value)
         {
             throw new NotImplementedException();
         }
 
-        protected void btnCancel_Click(object sender, EventArgs e)
+        public void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        protected void button1_Click(object sender, EventArgs e)
+        public void button1_Click(object sender, EventArgs e)
         {
             foreach (KeyValuePair<string, object> item in this.listTextBox.Dictionary)
             {
@@ -115,10 +118,6 @@ namespace SEP.Forms
             {
                 OnHandle(row);
             }
-        }
-
-        protected void FormBase_Load(object sender, EventArgs e)
-        {
         }
         
     }

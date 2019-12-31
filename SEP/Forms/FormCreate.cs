@@ -12,13 +12,13 @@ using System.Windows.Forms;
 
 namespace SEP.Forms
 {
-    public partial class CreateForm : FormBase
+    public partial class FormCreate : FormBase, IFormCreate
     {
-        public CreateForm(SEPDataRow row) :base(row)
+        public FormCreate(ISEPDataRow row) :base(row)
         {
             this.InitializeFormContent("Add New Row", "Add");
         }
 
-        protected override string GetTextTBox(object value) => "";
+        public override string InitTextBoxContent(object value) => "";
     }
 }

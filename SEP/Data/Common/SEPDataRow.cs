@@ -11,7 +11,7 @@ namespace SEP.Data.Common
     /// <summary>
     /// EntitySet mean: a table
     /// </summary>
-    public class SEPDataRow
+    public class SEPDataRow : ISEPDataRow
     {
         private Dictionary<string, object> fields = null;
         
@@ -19,12 +19,10 @@ namespace SEP.Data.Common
         {
             this.fields = new Dictionary<string, object>();
         }
-
         public SEPDataRow(Dictionary<string, object> dict)
         {
             this.fields = dict;
         }
-
         public SEPDataRow(DataGridView dgvTable)
         {
             this.fields = new Dictionary<string, object>();

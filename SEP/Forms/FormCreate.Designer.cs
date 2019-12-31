@@ -1,6 +1,6 @@
 ﻿namespace SEP.Forms
 {
-    partial class CreateForm
+    partial class FormCreate
     {
         /// <summary>
         /// Required designer variable.

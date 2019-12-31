@@ -1,4 +1,5 @@
 ﻿
+using SEP.Data.Client;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,21 +11,19 @@ using System.Windows.Forms;
 
 namespace SEP.Data.Common
 {
-    public class SEPCommand
+    public class SEPCommand : ISEPCommand
     {
-        private string cmdText;
-        private DbConnection dbConn;
+        private string query = String.Empty;
+        private DbConnection dbConn = null;
+        private ISEPDataProvider sepDP = null;
 
-        public SEPCommand()
-        {
-            this.cmdText = string.Empty;
-            this.dbConn = null;
-        }
+        public SEPCommand() { }
 
-        public SEPCommand(string commandText, SEPConnection connection)
+        public SEPCommand(string query, ISEPConnection sepConn, ISEPDataProvider sepDP)
         {
-            this.cmdText = commandText;
-            this.dbConn = connection.CreateConnection();
+            this.query = query;
+            this.sepDP = sepDP;
+            this.dbConn = sepConn.CreateConnection(sepDP);
         }
         public async Task<int> Insert()
         {
@@ -35,9 +34,9 @@ namespace SEP.Data.Common
                     this.dbConn.Open();
                 }
 
-                cmd.CommandText = this.cmdText;
+                cmd.CommandText = this.query;
 
-                DbDataAdapter adapter = new SEPDataAdapter().CreateDataAdapter();
+                DbDataAdapter adapter = new SEPDataAdapter(this.sepDP).CreateDataAdapter();
                 adapter.InsertCommand = cmd;
                 int x = await adapter.InsertCommand.ExecuteNonQueryAsync();
 
@@ -54,9 +53,8 @@ namespace SEP.Data.Common
                     this.dbConn.Open();
                 }
 
-                cmd.CommandText = this.cmdText;
-
-                DbDataAdapter adapter = new SEPDataAdapter().CreateDataAdapter();
+                cmd.CommandText = this.query;
+                DbDataAdapter adapter = new SEPDataAdapter(this.sepDP).CreateDataAdapter();
                 adapter.UpdateCommand = cmd;
                 int x = await adapter.UpdateCommand.ExecuteNonQueryAsync();
 
@@ -73,9 +71,9 @@ namespace SEP.Data.Common
                     this.dbConn.Open();
                 }
 
-                cmd.CommandText = this.cmdText;
+                cmd.CommandText = this.query;
 
-                DbDataAdapter adapter = new SEPDataAdapter().CreateDataAdapter();
+                DbDataAdapter adapter = new SEPDataAdapter(this.sepDP).CreateDataAdapter();
                 adapter.DeleteCommand = cmd;
                 int x = await adapter.DeleteCommand.ExecuteNonQueryAsync();
 

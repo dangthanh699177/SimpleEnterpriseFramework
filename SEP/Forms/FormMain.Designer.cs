@@ -1,11 +1,11 @@
-﻿namespace DemoClient
+﻿namespace SEP.Forms
 {
-    partial class FrmDemo
+    partial class FormMain
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        protected System.ComponentModel.IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -26,7 +26,7 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent()
+        protected void InitializeComponent()
         {
             this.dgvDataTable = new System.Windows.Forms.DataGridView();
             this.btnAdd = new System.Windows.Forms.Button();
@@ -48,9 +48,12 @@
             // 
             // dgvDataTable
             // 
+            this.dgvDataTable.AllowUserToAddRows = false;
+            this.dgvDataTable.AllowUserToDeleteRows = false;
             this.dgvDataTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvDataTable.Location = new System.Drawing.Point(6, 32);
             this.dgvDataTable.Name = "dgvDataTable";
+            this.dgvDataTable.ReadOnly = true;
             this.dgvDataTable.RowTemplate.Height = 24;
             this.dgvDataTable.Size = new System.Drawing.Size(736, 322);
             this.dgvDataTable.TabIndex = 7;
@@ -159,7 +162,7 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Table Option";
             // 
-            // MainForm
+            // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -169,7 +172,7 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Name = "MainForm";
+            this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Simple Enterprise Framework";
             this.Load += new System.EventHandler(this.MainForm_Load);
@@ -185,17 +188,17 @@
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dgvDataTable;
-        private System.Windows.Forms.Button btnAdd;
-        private System.Windows.Forms.ComboBox cbbTableName;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button btnRemove;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.Button btnExit;
+        protected System.Windows.Forms.DataGridView dgvDataTable;
+        protected System.Windows.Forms.Button btnAdd;
+        protected System.Windows.Forms.ComboBox cbbTableName;
+        protected System.Windows.Forms.GroupBox groupBox1;
+        protected System.Windows.Forms.GroupBox groupBox2;
+        protected System.Windows.Forms.Button btnRemove;
+        protected System.Windows.Forms.GroupBox groupBox3;
+        protected System.Windows.Forms.Label label3;
+        protected System.Windows.Forms.Label label2;
+        protected System.Windows.Forms.GroupBox groupBox4;
+        protected System.Windows.Forms.Button btnExit;
     }
 }
 

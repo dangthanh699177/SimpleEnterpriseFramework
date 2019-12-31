@@ -3,9 +3,17 @@ using System.Text;
 
 namespace SEP.Data.Common
 {
-    public class SEPParameters
+    public class QueryHandler : IQueryHandler
     {
-        private class Condition
+        private ISEPDataRow sepRow = null;
+
+        public QueryHandler() { }
+        public QueryHandler(ISEPDataRow sepRow)
+        {
+            this.sepRow = sepRow;
+        }
+
+        public class Condition
         {
             public string Name { get; set; }
             public string Value { get; set; }
@@ -23,11 +31,11 @@ namespace SEP.Data.Common
         /// <summary>
         /// Retrieve list name of propertys and convert it to string type
         /// </summary>
-        public static string GetListPropertyName(SEPDataRow dRow)
+        public string GetListPropertyName()
         {
             StringBuilder propertyNames = new StringBuilder();
 
-            foreach(KeyValuePair<string, object> item in dRow.Dictionary)
+            foreach(KeyValuePair<string, object> item in this.sepRow.Dictionary)
             {
                 if (item.Key == "id" || item.Key == "iD" || item.Key == "Id" || item.Key == "ID")
                 {
@@ -44,11 +52,11 @@ namespace SEP.Data.Common
         /// <summary>
         /// Retrieve list value of propertys and convert it to string type
         /// </summary>
-        public static string GetListValue(SEPDataRow dRow)
+        public string GetListValue()
         {
             StringBuilder values = new StringBuilder();
 
-            foreach (KeyValuePair<string, object> item in dRow.Dictionary)
+            foreach (KeyValuePair<string, object> item in this.sepRow.Dictionary)
             {
                 if (item.Key == "id" || item.Key == "iD" || item.Key == "Id" || item.Key == "ID")
                 {
@@ -68,9 +76,9 @@ namespace SEP.Data.Common
 
         // function below is use for condition "Where ..." Command
 
-        private static Condition CheckID(SEPDataRow dRow)
+        public Condition GetID()
         {
-            foreach (KeyValuePair<string, object> item in dRow.Dictionary)
+            foreach (KeyValuePair<string, object> item in this.sepRow.Dictionary)
             {
                 if (item.Key == "ID" ||
                     item.Key == "Id" ||
@@ -83,15 +91,17 @@ namespace SEP.Data.Common
             return null;
         }
 
-        private static string GetIDKey(SEPDataRow dRow) => CheckID(dRow).Name;
+        public bool CheckID(KeyValuePair<string, object> item)
+        {
+            return item.Key == "ID" || item.Key == "Id" || item.Key == "iD" || item.Key == "id"
+                ? true : false;
+        }
 
-        private static string GetIDValue(SEPDataRow dRow) => CheckID(dRow).Value;
-
-        private static string GetListCondition(SEPDataRow dRow)
+        public string GetAllCondition()
         {
             StringBuilder lCon = new StringBuilder();
 
-            foreach(KeyValuePair<string, object> item in dRow.Dictionary)
+            foreach(KeyValuePair<string, object> item in this.sepRow.Dictionary)
             {
                 if (item.Key.GetType() == typeof(string))
                     lCon.Append($"{item.Key} = N'{item.Value}'");
@@ -104,20 +114,20 @@ namespace SEP.Data.Common
             return lCon.Remove(lCon.Length - 5, 5).ToString();
         }
 
-        public static string GetCondition(SEPDataRow dRow)
-            => CheckID(dRow) != null
-                ? $"{CheckID(dRow).Name} = {CheckID(dRow).Value}"
-                : GetListCondition(dRow);
+        public string GetCondition()
+            => this.GetID() != null
+                ? $"{this.GetID().Name} = {this.GetID().Value}"
+                : this.GetAllCondition();
 
         // function below is use for command:
         // update table_name set <GetEntity()> where ...
-        public static string GetEntity(SEPDataRow dRow)
+        public string GetEntity()
         {
             StringBuilder entity = new StringBuilder();
 
-            foreach(KeyValuePair<string, object> item in dRow.Dictionary)
+            foreach(KeyValuePair<string, object> item in this.sepRow.Dictionary)
             {
-                if (item.Key == "id" || item.Key == "iD" || item.Key == "Id" || item.Key == "ID")
+                if (this.CheckID(item))
                 {
                     continue;
                 }
