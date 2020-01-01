@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SEP.Data.Common
+namespace SEP.Data.Utilities
 {
     public interface IQueryHandler
     {

@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using SEP.Data.Common;
+using System.Collections.Generic;
 using System.Text;
 
-namespace SEP.Data.Common
+namespace SEP.Data.Utilities
 {
     public class QueryHandler : IQueryHandler
     {

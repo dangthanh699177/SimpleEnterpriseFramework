@@ -13,7 +13,6 @@ namespace SEP.Forms
     {
         public FormMain()
         {
-            InitializeComponent();
         }
 
         // declare (1)
@@ -26,7 +25,15 @@ namespace SEP.Forms
         ISEPCommand cmd = null;
         ISEPDataRow sepRow = null;
 
-        public void MainForm_Load(object sender, EventArgs e)
+        public void Run()
+        {
+            InitializeComponent();
+            // Open this form dialog
+            this.Load += new System.EventHandler(this.MainForm_Load);
+            this.Show();
+        }
+
+        protected void MainForm_Load(object sender, EventArgs e)
         {
             // define (1.1)
             DataSource.AddStandardDataSources(dcd);
@@ -55,6 +62,7 @@ namespace SEP.Forms
 
                 // hidden id column
                 this.dgvDataTable.Columns[0].Visible = false;
+
             }
             else
             {
@@ -62,7 +70,7 @@ namespace SEP.Forms
             }
         }
 
-        public void cbbTableName_SelectedIndexChanged(object sender, EventArgs e)
+        protected void cbbTableName_SelectedIndexChanged(object sender, EventArgs e)
         {
             // select * from table
             this.query = new SQLQuery(this.cbbTableName.SelectedItem.ToString());
@@ -73,7 +81,7 @@ namespace SEP.Forms
             this.dgvDataTable.DataSource = this.bs.DataSource;
         }
 
-        public void dgvDataTable_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        protected void dgvDataTable_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             // update bindingSource
             this.bs.Position = e.RowIndex;
@@ -84,7 +92,7 @@ namespace SEP.Forms
             frm.ShowDialog();
         }
 
-        public void btnAdd_Click(object sender, EventArgs e)
+        protected void btnAdd_Click(object sender, EventArgs e)
         {
             // assign selection for datagridview
             this.dgvDataTable.CurrentCell = this.dgvDataTable[1, 0];
@@ -96,7 +104,7 @@ namespace SEP.Forms
             frm.ShowDialog();
         }
 
-        public async void Frm_OnUpdateAsync(ISEPDataRow dRow)
+        protected async void Frm_OnUpdateAsync(ISEPDataRow dRow)
         {
             this.query = new SQLQuery(this.cbbTableName.SelectedItem.ToString());
             this.cmd = new SEPCommand(this.query.Update(sepRow), this.conn, this.provider);
@@ -116,7 +124,7 @@ namespace SEP.Forms
             }
         }
 
-        public async void Frm_OnCreateAsync(ISEPDataRow dRow)
+        protected async void Frm_OnCreateAsync(ISEPDataRow dRow)
         {
             this.query = new SQLQuery(this.cbbTableName.SelectedItem.ToString());
             this.cmd = new SEPCommand(this.query.Insert(sepRow), this.conn, this.provider);
@@ -138,13 +146,14 @@ namespace SEP.Forms
 
         }
 
-        public async void btnRemove_ClickAsync(object sender, EventArgs e)
+        protected async void btnRemove_ClickAsync(object sender, EventArgs e)
         {
             if (MessageBox.Show("Bạn có chắc chắn muôn xóa bản ghi đang chọn không?", "Thông báo",MessageBoxButtons.YesNo) == DialogResult.No)
             {
                 return;
             }
-            
+
+            this.sepRow = new SEPDataRow(this.dgvDataTable);
             this.query = new SQLQuery(this.cbbTableName.SelectedItem.ToString());
             this.cmd = new SEPCommand(this.query.Delete(this.sepRow), this.conn, this.provider);
 
@@ -162,7 +171,7 @@ namespace SEP.Forms
             }
         }
 
-        public void btnExit_Click(object sender, EventArgs e)
+        protected void btnExit_Click(object sender, EventArgs e)
         {
             Environment.Exit(0);
         }
@@ -192,6 +201,5 @@ namespace SEP.Forms
                 rowView[item.Key] = item.Value;
             }
         }
-
     }
 }

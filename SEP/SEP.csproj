@@ -65,7 +65,6 @@
     <Compile Include="Data\Common\SEPDataRow.cs" />
     <Compile Include="Data\Common\SEPCommand.cs" />
     <Compile Include="Data\Client\SEPConnection.cs" />
-    <Compile Include="ContainerConfig.cs" />
     <Compile Include="Data\Utilities\SQLQuery.cs" />
     <Compile Include="Forms\FormCreate.cs">
       <SubType>Form</SubType>

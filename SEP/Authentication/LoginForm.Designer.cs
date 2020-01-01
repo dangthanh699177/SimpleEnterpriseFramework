@@ -1,4 +1,4 @@
-﻿namespace SEP.Forms
+﻿namespace SEP.Authentication
 {
     partial class LoginForm
     {
