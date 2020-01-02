@@ -15,13 +15,11 @@ namespace SEP.Forms
         public FormMain()
         {
         }
-
-        // declare (1)
+        
         DataConnectionDialog dcd = new DataConnectionDialog();
         BindingSource bs = new BindingSource();
         ISEPDataProvider sepProvider = null;
         ISEPConnection sepConn = null;
-        ISEPDataAdapter sepAdapter = null;
         IQuery query = null;
         ISEPCommand cmd = null;
         ISEPDataRow sepRow = null;
@@ -31,56 +29,44 @@ namespace SEP.Forms
         public void Run()
         {
             InitializeComponent();
-            // Open this form dialog
-            this.Load += new System.EventHandler(this.MainForm_Load);
-            this.Show();
-        }
-
-        protected void MainForm_Load(object sender, EventArgs e)
-        {
-            // define (1.1)
             DataSource.AddStandardDataSources(dcd);
-            
-            if (DataConnectionDialog.Show(dcd) == DialogResult.OK)
-            {
-                sepProvider = SEPDataProvider.Instance;
-                sepProvider.SetName(dcd.SelectedDataProvider.Name);
-                sepConn = SEPConnection.Instance;
-                sepConn.SetPath(dcd.ConnectionString);
-                query = Query.Instance;
-                cmd = SEPCommand.Instance(sepConn, sepProvider);
 
-                //LoginForm frmLogin = new LoginForm();
-                LoginForm frmLogin = new LoginForm(sepConn, sepProvider);
-
-                if (frmLogin.ShowDialog() == DialogResult.OK)
-                {
-                    // get list name of tables in database
-                    this.cbbTableName.DataSource = this.cmd.GetListTableName();
-
-                    // set default for combobox
-                    this.cbbTableName.SelectedIndex = 0;
-
-                    // view DataTable with BindingSource
-                    tableName = this.cbbTableName.SelectedItem.ToString();
-                    commandText = query.Select(tableName);
-                    bs.DataSource = cmd.GetTable(commandText);
-                    this.dgvDataTable.DataSource = bs.DataSource;
-
-                    // hidden id column
-                    this.dgvDataTable.Columns[0].Visible = false;
-                }
-                else
-                {
-                    Application.Exit();
-                }
-            }
-            else
+            if (DataConnectionDialog.Show(dcd) == DialogResult.None)
             {
                 Application.Exit();
             }
-        }
 
+            sepProvider = SEPDataProvider.Instance;
+            sepProvider.SetName(dcd.SelectedDataProvider.Name);
+            sepConn = SEPConnection.Instance;
+            sepConn.SetPath(dcd.ConnectionString);
+            query = Query.Instance;
+            cmd = SEPCommand.Instance(sepConn, sepProvider);
+
+            LoginForm frmLogin = new LoginForm(sepConn, sepProvider);
+
+            if (frmLogin.ShowDialog() == DialogResult.None)
+            {
+                Application.Exit();
+            }
+
+            // get list name of tables in database
+            this.cbbTableName.DataSource = this.cmd.GetListTableName();
+
+            // set default for combobox
+            this.cbbTableName.SelectedIndex = 0;
+
+            // view DataTable with BindingSource
+            tableName = this.cbbTableName.SelectedItem.ToString();
+            commandText = query.Select(tableName);
+            bs.DataSource = cmd.GetTable(commandText);
+            this.dgvDataTable.DataSource = bs.DataSource;
+
+            // hidden id column
+            this.dgvDataTable.Columns[0].Visible = false;
+            this.Show();
+        }
+        
         protected void cbbTableName_SelectedIndexChanged(object sender, EventArgs e)
         {
             // select * from table

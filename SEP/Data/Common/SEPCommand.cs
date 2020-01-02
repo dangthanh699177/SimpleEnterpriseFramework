@@ -150,7 +150,7 @@ namespace SEP.Data.Common
                 return table;
             }
         }
-        public bool CheckExistsTable(string commandText)
+        public bool ExecuteCommand(string commandText)
         {
             DbCommand cmd = dbConn.CreateCommand();
 

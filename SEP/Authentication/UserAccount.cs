@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SEP.Authentication
 {
-    public class UserAccount : IUserAccount
+    public class UserAccount
     {
         public int Id { get; set; }
         public string FirstName { get; set; }

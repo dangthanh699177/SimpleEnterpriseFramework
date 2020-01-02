@@ -34,8 +34,7 @@
             this.lblPassword = new System.Windows.Forms.Label();
             this.tbPassword = new System.Windows.Forms.TextBox();
             this.btnExit = new System.Windows.Forms.Button();
-            this.labelForgetPassword = new System.Windows.Forms.Label();
-            this.labelRegister = new System.Windows.Forms.Label();
+            this.lblRegister = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lblUsername
@@ -91,31 +90,19 @@
             this.btnExit.UseVisualStyleBackColor = true;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
-            // labelForgetPassword
+            // lblRegister
             // 
-            this.labelForgetPassword.AutoSize = true;
-            this.labelForgetPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelForgetPassword.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.labelForgetPassword.Location = new System.Drawing.Point(186, 165);
-            this.labelForgetPassword.Name = "labelForgetPassword";
-            this.labelForgetPassword.Size = new System.Drawing.Size(113, 17);
-            this.labelForgetPassword.TabIndex = 6;
-            this.labelForgetPassword.Text = "Forget password";
-            this.labelForgetPassword.Click += new System.EventHandler(this.labelForgetPassword_Click);
-            this.labelForgetPassword.MouseHover += new System.EventHandler(this.labelForgetPassword_MouseHover);
-            // 
-            // labelRegister
-            // 
-            this.labelRegister.AutoSize = true;
-            this.labelRegister.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelRegister.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.labelRegister.Location = new System.Drawing.Point(378, 165);
-            this.labelRegister.Name = "labelRegister";
-            this.labelRegister.Size = new System.Drawing.Size(61, 17);
-            this.labelRegister.TabIndex = 7;
-            this.labelRegister.Text = "Register";
-            this.labelRegister.Click += new System.EventHandler(this.labelRegister_Click);
-            this.labelRegister.MouseHover += new System.EventHandler(this.labelRegister_MouseHover);
+            this.lblRegister.AutoSize = true;
+            this.lblRegister.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblRegister.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.lblRegister.Location = new System.Drawing.Point(378, 165);
+            this.lblRegister.Name = "lblRegister";
+            this.lblRegister.Size = new System.Drawing.Size(61, 17);
+            this.lblRegister.TabIndex = 7;
+            this.lblRegister.Text = "Register";
+            this.lblRegister.Click += new System.EventHandler(this.lblRegister_Click);
+            this.lblRegister.MouseEnter += new System.EventHandler(this.lblRegister_MouseEnter);
+            this.lblRegister.MouseLeave += new System.EventHandler(this.lblRegister_MouseLeave);
             // 
             // LoginForm
             // 
@@ -125,12 +112,12 @@
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.tbPassword);
-            this.Controls.Add(this.labelRegister);
-            this.Controls.Add(this.labelForgetPassword);
+            this.Controls.Add(this.lblRegister);
             this.Controls.Add(this.lblPassword);
             this.Controls.Add(this.tbUsername);
             this.Controls.Add(this.lblUsername);
             this.Name = "LoginForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "LoginForm";
             this.Load += new System.EventHandler(this.LoginForm_Load);
             this.ResumeLayout(false);
@@ -146,7 +133,6 @@
         private System.Windows.Forms.Label lblPassword;
         private System.Windows.Forms.TextBox tbPassword;
         private System.Windows.Forms.Button btnExit;
-        private System.Windows.Forms.Label labelForgetPassword;
-        private System.Windows.Forms.Label labelRegister;
+        private System.Windows.Forms.Label lblRegister;
     }
 }

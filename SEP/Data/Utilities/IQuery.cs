@@ -1,4 +1,5 @@
-﻿using SEP.Data.Common;
+﻿using SEP.Authentication;
+using SEP.Data.Common;
 
 namespace SEP.Data.Utilities
 {
@@ -8,6 +9,7 @@ namespace SEP.Data.Utilities
         string Delete(string tbName);
         string Delete(string tbName, ISEPDataRow sepRow);
         string Insert(string tbName, ISEPDataRow sepRow);
+        string Insert(string tbName, UserAccount u);
         string Select(string tbName);
         string Update(string tbName, ISEPDataRow sepRow);
     }

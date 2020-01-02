@@ -12,6 +12,6 @@ namespace SEP.Data.Common
         DataTable GetTable(string commandText);
         Task<int> Insert(string commandText);
         Task<int> Update(string commandText);
-        bool CheckExistsTable(string commandText);
+        bool ExecuteCommand(string commandText);
     }
 }

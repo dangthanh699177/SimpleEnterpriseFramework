@@ -28,7 +28,6 @@ namespace SEP.Data.Utilities
         {
             return $"select * from {tbName}";
         }
-
         public string Insert(string tbName, ISEPDataRow sepRow)
         {
             IQueryHelper q = new QueryHelper(sepRow);
@@ -37,7 +36,10 @@ namespace SEP.Data.Utilities
                 $" values ({q.GetListValue()})";
 
         }
-
+        public string Insert(string tbName, UserAccount u)
+        {
+            return $"insert into {tbName} values (N'{u.FirstName}', N'{u.LastName}', '{u.Username}', '{u.Password}')";
+        }
         public string Update(string tbName, ISEPDataRow sepRow)
         {
             IQueryHelper q = new QueryHelper(sepRow);
@@ -46,32 +48,29 @@ namespace SEP.Data.Utilities
                 $" where {q.GetCondition()}";
 
         }
-
         public string Delete(string tbName)
         {
             return $"delete from {tbName}";
         }
-
         public string Delete(string tbName, ISEPDataRow sepRow)
         {
             IQueryHelper q = new QueryHelper(sepRow);
             return $"delete from {tbName}" +
                 $" where {q.GetAllCondition()}";
         }
-
         public string CreateTable(string tbName)
         {
-            return $"if exists (select * from sys.tables where name like '{tbName}')" +
-                    $"drop table {tbName}" +
-                    $"create table {tbName}" +
+            return $"if not exists (select name from sys.tables where name = '{tbName}') " +
+                    $"create table {tbName} " +
                     "(" +
                     "   Id  int identity(1,1) not null," +
                     "	FirstName nvarchar(50) not null," +
                     "	LastName nvarchar(50) not null," +
                     "	Username varchar(50) not null," +
-                    "	Password varchar(16) not null" +
+                    "	Password varchar(1000) not null" +
                     "   constraint PK_UserAccountId primary key clustered(Id)" +
-                    ")";
+                    ") " +
+                    $"insert into {tbName} values (N'Dang', N'Huynh Thanh', 'itcui', 'MTIzNDU2')";
         }
     }
 }

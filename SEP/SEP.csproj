@@ -52,7 +52,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Authentication\IUserAccount.cs" />
+    <Compile Include="Authentication\Security\Base64Decrypt.cs" />
+    <Compile Include="Authentication\Security\Base64Encrypt.cs" />
+    <Compile Include="Authentication\Security\Decrypt.cs" />
+    <Compile Include="Authentication\Security\Encrypt.cs" />
+    <Compile Include="Authentication\Security\IDecrypt.cs" />
+    <Compile Include="Authentication\Security\IEncrypt.cs" />
+    <Compile Include="Authentication\Security\Sha256Decrypt.cs" />
+    <Compile Include="Authentication\Security\Sha256Encrypt.cs" />
     <Compile Include="Authentication\UserAccount.cs" />
     <Compile Include="Data\Client\ISEPConnection.cs" />
     <Compile Include="Data\Common\ISEPCommand.cs" />
