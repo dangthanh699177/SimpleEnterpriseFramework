@@ -12,10 +12,11 @@ namespace SEP
         {
             SQLServer,
             MySQL,
+            Oracle,
             Unknow
         }
 
-        public static DbName GetDbName(string dbName)
+        public static DbName GetDbType(string dbName)
         {
             switch(dbName.ToLower())
             {
@@ -23,6 +24,8 @@ namespace SEP
                     return DbName.SQLServer;
                 case "mysql":
                     return DbName.MySQL;
+                case "oracle":
+                    return DbName.Oracle;
                 default:
                     return DbName.Unknow;
             }

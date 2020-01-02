@@ -7,7 +7,5 @@ namespace SEP.Data.Common
     public interface ISEPDataAdapter
     {
         DbDataAdapter CreateDataAdapter();
-        List<string> GetListTableName();
-        DataTable GetTable();
     }
 }

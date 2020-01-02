@@ -52,20 +52,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authentication\IUserAccount.cs" />
+    <Compile Include="Authentication\UserAccount.cs" />
     <Compile Include="Data\Client\ISEPConnection.cs" />
     <Compile Include="Data\Common\ISEPCommand.cs" />
     <Compile Include="Data\Common\ISEPDataAdapter.cs" />
     <Compile Include="Data\Common\ISEPDataProvider.cs" />
     <Compile Include="Data\Common\ISEPDataRow.cs" />
-    <Compile Include="Data\Utilities\IQueryHandler.cs" />
-    <Compile Include="Data\Utilities\ISQLQuery.cs" />
-    <Compile Include="Data\Utilities\QueryHandler.cs" />
+    <Compile Include="Data\Utilities\IQuery.cs" />
+    <Compile Include="Data\Utilities\IQueryHelper.cs" />
+    <Compile Include="Data\Utilities\QueryHelper.cs" />
     <Compile Include="Data\Common\SEPDataAdapter.cs" />
     <Compile Include="Data\Common\SEPDataProvider.cs" />
     <Compile Include="Data\Common\SEPDataRow.cs" />
     <Compile Include="Data\Common\SEPCommand.cs" />
     <Compile Include="Data\Client\SEPConnection.cs" />
-    <Compile Include="Data\Utilities\SQLQuery.cs" />
+    <Compile Include="Data\Utilities\Query.cs" />
     <Compile Include="Forms\FormCreate.cs">
       <SubType>Form</SubType>
     </Compile>

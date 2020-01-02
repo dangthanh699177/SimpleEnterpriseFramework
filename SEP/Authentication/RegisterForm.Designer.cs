@@ -35,11 +35,15 @@
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxUserID = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.lblFirstName = new System.Windows.Forms.Label();
+            this.tbFirstName = new System.Windows.Forms.TextBox();
+            this.lblLastName = new System.Windows.Forms.Label();
+            this.tbLastName = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Location = new System.Drawing.Point(323, 112);
+            this.buttonCancel.Location = new System.Drawing.Point(323, 161);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(116, 38);
             this.buttonCancel.TabIndex = 9;
@@ -49,7 +53,7 @@
             // 
             // buttonRegister
             // 
-            this.buttonRegister.Location = new System.Drawing.Point(189, 112);
+            this.buttonRegister.Location = new System.Drawing.Point(189, 161);
             this.buttonRegister.Name = "buttonRegister";
             this.buttonRegister.Size = new System.Drawing.Size(116, 38);
             this.buttonRegister.TabIndex = 10;
@@ -58,7 +62,7 @@
             // 
             // textBoxPassword
             // 
-            this.textBoxPassword.Location = new System.Drawing.Point(189, 67);
+            this.textBoxPassword.Location = new System.Drawing.Point(189, 116);
             this.textBoxPassword.Name = "textBoxPassword";
             this.textBoxPassword.Size = new System.Drawing.Size(250, 22);
             this.textBoxPassword.TabIndex = 7;
@@ -68,7 +72,7 @@
             this.labelGotoLogin.AutoSize = true;
             this.labelGotoLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelGotoLogin.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.labelGotoLogin.Location = new System.Drawing.Point(186, 167);
+            this.labelGotoLogin.Location = new System.Drawing.Point(186, 216);
             this.labelGotoLogin.Name = "labelGotoLogin";
             this.labelGotoLogin.Size = new System.Drawing.Size(223, 17);
             this.labelGotoLogin.TabIndex = 3;
@@ -78,7 +82,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(68, 73);
+            this.label2.Location = new System.Drawing.Point(68, 122);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(73, 17);
             this.label2.TabIndex = 5;
@@ -86,7 +90,7 @@
             // 
             // textBoxUserID
             // 
-            this.textBoxUserID.Location = new System.Drawing.Point(189, 39);
+            this.textBoxUserID.Location = new System.Drawing.Point(189, 88);
             this.textBoxUserID.Name = "textBoxUserID";
             this.textBoxUserID.Size = new System.Drawing.Size(250, 22);
             this.textBoxUserID.TabIndex = 8;
@@ -94,22 +98,58 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(68, 45);
+            this.label1.Location = new System.Drawing.Point(68, 94);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(55, 17);
+            this.label1.Size = new System.Drawing.Size(73, 17);
             this.label1.TabIndex = 6;
-            this.label1.Text = "UserID:";
+            this.label1.Text = "Username";
+            // 
+            // lblFirstName
+            // 
+            this.lblFirstName.AutoSize = true;
+            this.lblFirstName.Location = new System.Drawing.Point(68, 37);
+            this.lblFirstName.Name = "lblFirstName";
+            this.lblFirstName.Size = new System.Drawing.Size(72, 17);
+            this.lblFirstName.TabIndex = 6;
+            this.lblFirstName.Text = "FirstName";
+            // 
+            // tbFirstName
+            // 
+            this.tbFirstName.Location = new System.Drawing.Point(189, 32);
+            this.tbFirstName.Name = "tbFirstName";
+            this.tbFirstName.Size = new System.Drawing.Size(250, 22);
+            this.tbFirstName.TabIndex = 8;
+            // 
+            // lblLastName
+            // 
+            this.lblLastName.AutoSize = true;
+            this.lblLastName.Location = new System.Drawing.Point(68, 65);
+            this.lblLastName.Name = "lblLastName";
+            this.lblLastName.Size = new System.Drawing.Size(72, 17);
+            this.lblLastName.TabIndex = 5;
+            this.lblLastName.Text = "LastName";
+            // 
+            // tbLastName
+            // 
+            this.tbLastName.Location = new System.Drawing.Point(189, 60);
+            this.tbLastName.Name = "tbLastName";
+            this.tbLastName.Size = new System.Drawing.Size(250, 22);
+            this.tbLastName.TabIndex = 7;
             // 
             // RegisterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(506, 222);
+            this.ClientSize = new System.Drawing.Size(506, 264);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonRegister);
+            this.Controls.Add(this.tbLastName);
             this.Controls.Add(this.textBoxPassword);
             this.Controls.Add(this.labelGotoLogin);
+            this.Controls.Add(this.lblLastName);
             this.Controls.Add(this.label2);
+            this.Controls.Add(this.tbFirstName);
+            this.Controls.Add(this.lblFirstName);
             this.Controls.Add(this.textBoxUserID);
             this.Controls.Add(this.label1);
             this.Name = "RegisterForm";
@@ -128,5 +168,9 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBoxUserID;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblFirstName;
+        private System.Windows.Forms.TextBox tbFirstName;
+        private System.Windows.Forms.Label lblLastName;
+        private System.Windows.Forms.TextBox tbLastName;
     }
 }

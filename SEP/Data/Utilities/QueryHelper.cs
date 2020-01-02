@@ -4,12 +4,12 @@ using System.Text;
 
 namespace SEP.Data.Utilities
 {
-    public class QueryHandler : IQueryHandler
+    public class QueryHelper : IQueryHelper
     {
         private ISEPDataRow sepRow = null;
 
-        public QueryHandler() { }
-        public QueryHandler(ISEPDataRow sepRow)
+        public QueryHelper() { }
+        public QueryHelper(ISEPDataRow sepRow)
         {
             this.sepRow = sepRow;
         }

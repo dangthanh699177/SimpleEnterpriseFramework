@@ -7,7 +7,9 @@ namespace SEP.Data.Common
     {
         public static string dpName;
         private static SEPDataProvider instance;
+
         private SEPDataProvider() { }
+
         public static SEPDataProvider Instance
         {
             get

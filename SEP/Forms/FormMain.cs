@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
 using Microsoft.Data.ConnectionUI;
+using SEP.Authentication;
 using SEP.Data.Client;
 using SEP.Data.Common;
 using SEP.Data.Utilities;
@@ -18,12 +19,14 @@ namespace SEP.Forms
         // declare (1)
         DataConnectionDialog dcd = new DataConnectionDialog();
         BindingSource bs = new BindingSource();
-        ISEPDataProvider provider = null;
-        ISEPConnection conn = null;
+        ISEPDataProvider sepProvider = null;
+        ISEPConnection sepConn = null;
         ISEPDataAdapter sepAdapter = null;
-        ISQLQuery query = null;
+        IQuery query = null;
         ISEPCommand cmd = null;
         ISEPDataRow sepRow = null;
+        string commandText = String.Empty;
+        string tableName = String.Empty;
 
         public void Run()
         {
@@ -37,47 +40,54 @@ namespace SEP.Forms
         {
             // define (1.1)
             DataSource.AddStandardDataSources(dcd);
-
-            // Show Connection Dialog
+            
             if (DataConnectionDialog.Show(dcd) == DialogResult.OK)
             {
-                // define (1.1)
-                this.provider = SEPDataProvider.Instance;
-                this.provider.SetName(dcd.SelectedDataProvider.Name);
-                this.conn = SEPConnection.Instance;
-                this.conn.SetPath(dcd.ConnectionString);
+                sepProvider = SEPDataProvider.Instance;
+                sepProvider.SetName(dcd.SelectedDataProvider.Name);
+                sepConn = SEPConnection.Instance;
+                sepConn.SetPath(dcd.ConnectionString);
+                query = Query.Instance;
+                cmd = SEPCommand.Instance(sepConn, sepProvider);
 
-                // get list name of tables in database
-                this.sepAdapter = new SEPDataAdapter(this.conn, this.provider);
-                this.cbbTableName.DataSource = sepAdapter.GetListTableName();
+                //LoginForm frmLogin = new LoginForm();
+                LoginForm frmLogin = new LoginForm(sepConn, sepProvider);
 
-                // set default for combobox
-                this.cbbTableName.SelectedIndex = 0;
-                this.query = new SQLQuery(this.cbbTableName.SelectedItem.ToString());
-                this.sepAdapter = new SEPDataAdapter(this.query.Select(), this.conn, this.provider);
+                if (frmLogin.ShowDialog() == DialogResult.OK)
+                {
+                    // get list name of tables in database
+                    this.cbbTableName.DataSource = this.cmd.GetListTableName();
 
-                // view DataTable with BindingSource
-                this.bs.DataSource = this.sepAdapter.GetTable();
-                this.dgvDataTable.DataSource = this.bs.DataSource;
+                    // set default for combobox
+                    this.cbbTableName.SelectedIndex = 0;
 
-                // hidden id column
-                this.dgvDataTable.Columns[0].Visible = false;
+                    // view DataTable with BindingSource
+                    tableName = this.cbbTableName.SelectedItem.ToString();
+                    commandText = query.Select(tableName);
+                    bs.DataSource = cmd.GetTable(commandText);
+                    this.dgvDataTable.DataSource = bs.DataSource;
 
+                    // hidden id column
+                    this.dgvDataTable.Columns[0].Visible = false;
+                }
+                else
+                {
+                    Application.Exit();
+                }
             }
             else
             {
-                Environment.Exit(0);
+                Application.Exit();
             }
         }
 
         protected void cbbTableName_SelectedIndexChanged(object sender, EventArgs e)
         {
             // select * from table
-            this.query = new SQLQuery(this.cbbTableName.SelectedItem.ToString());
-            this.sepAdapter = new SEPDataAdapter(this.query.Select(), this.conn, this.provider);
-
             // binding source
-            this.bs.DataSource = this.sepAdapter.GetTable();
+            tableName = this.cbbTableName.SelectedItem.ToString();
+            commandText = query.Select(tableName);
+            this.bs.DataSource = cmd.GetTable(commandText);
             this.dgvDataTable.DataSource = this.bs.DataSource;
         }
 
@@ -106,10 +116,10 @@ namespace SEP.Forms
 
         protected async void Frm_OnUpdateAsync(ISEPDataRow dRow)
         {
-            this.query = new SQLQuery(this.cbbTableName.SelectedItem.ToString());
-            this.cmd = new SEPCommand(this.query.Update(sepRow), this.conn, this.provider);
+            tableName = this.cbbTableName.SelectedItem.ToString();
+            commandText = query.Update(tableName, dRow);
             
-            if (await this.cmd.Update() < 0)
+            if (await cmd.Update(commandText) < 0)
             {
                 MessageBox.Show("Cap nhat du lieu khong thanh cong.");
             }
@@ -126,10 +136,10 @@ namespace SEP.Forms
 
         protected async void Frm_OnCreateAsync(ISEPDataRow dRow)
         {
-            this.query = new SQLQuery(this.cbbTableName.SelectedItem.ToString());
-            this.cmd = new SEPCommand(this.query.Insert(sepRow), this.conn, this.provider);
+            tableName = this.cbbTableName.SelectedItem.ToString();
+            commandText = query.Insert(tableName, dRow);
 
-            if (await cmd.Insert() < 0)
+            if (await cmd.Insert(commandText) < 0)
             {
                 MessageBox.Show("Them du lieu khong thanh cong.");
             }
@@ -154,10 +164,10 @@ namespace SEP.Forms
             }
 
             this.sepRow = new SEPDataRow(this.dgvDataTable);
-            this.query = new SQLQuery(this.cbbTableName.SelectedItem.ToString());
-            this.cmd = new SEPCommand(this.query.Delete(this.sepRow), this.conn, this.provider);
+            tableName = this.cbbTableName.SelectedItem.ToString();
+            commandText = query.Delete(tableName, this.sepRow);
 
-            if (await cmd.Delete() < 0)
+            if (await cmd.Delete(commandText) < 0)
             {
                 MessageBox.Show("Xoa du lieu khong thanh cong.");
             }
@@ -173,12 +183,12 @@ namespace SEP.Forms
 
         protected void btnExit_Click(object sender, EventArgs e)
         {
-            Environment.Exit(0);
+            Application.Exit();
         }
 
-        public void ConvertToDataRow(DataRow row, ISEPDataRow sepRow)
+        public void ConvertToDataRow(DataRow row, ISEPDataRow dRow)
         {
-            foreach (KeyValuePair<string, object> item in sepRow.Dictionary)
+            foreach (KeyValuePair<string, object> item in dRow.Dictionary)
             {
                 if (item.Key == "id" || item.Key == "iD" || item.Key == "Id" || item.Key == "ID")
                 {
@@ -189,9 +199,9 @@ namespace SEP.Forms
             }
         }
 
-        public void ConvertToDataRowView(DataRowView rowView, ISEPDataRow sepRow)
+        public void ConvertToDataRowView(DataRowView rowView, ISEPDataRow dRow)
         {
-            foreach (KeyValuePair<string, object> item in sepRow.Dictionary)
+            foreach (KeyValuePair<string, object> item in dRow.Dictionary)
             {
                 if (item.Key == "id" || item.Key == "iD" || item.Key == "Id" || item.Key == "ID")
                 {
