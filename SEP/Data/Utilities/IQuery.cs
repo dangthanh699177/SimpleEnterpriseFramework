@@ -11,6 +11,7 @@ namespace SEP.Data.Utilities
         string Insert(string tbName, ISEPDataRow sepRow);
         string Insert(string tbName, UserAccount u);
         string Select(string tbName);
+        string Select(string field, string tbName, Condition c);
         string Update(string tbName, ISEPDataRow sepRow);
     }
 }

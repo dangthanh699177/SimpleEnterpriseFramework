@@ -1,6 +1,7 @@
 ﻿using SEP.Authentication;
 using SEP.Data.Common;
 using System;
+using System.Collections.Generic;
 
 namespace SEP.Data.Utilities
 {
@@ -27,6 +28,10 @@ namespace SEP.Data.Utilities
         public string Select(string tbName)
         {
             return $"select * from {tbName}";
+        }
+        public string Select(string field, string tbName, Condition c)
+        {
+            return $"select {field} from {tbName} where {c.Name} = '{c.Value}'";
         }
         public string Insert(string tbName, ISEPDataRow sepRow)
         {

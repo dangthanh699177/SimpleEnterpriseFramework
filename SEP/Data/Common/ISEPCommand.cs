@@ -11,6 +11,7 @@ namespace SEP.Data.Common
         List<string> GetListTableName();
         DataTable GetTable(string commandText);
         Task<int> Insert(string commandText);
+        int InsertNotAsync(string commandText);
         Task<int> Update(string commandText);
         bool ExecuteCommand(string commandText);
     }

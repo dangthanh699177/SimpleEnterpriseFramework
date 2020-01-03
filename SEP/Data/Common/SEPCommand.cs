@@ -48,6 +48,23 @@ namespace SEP.Data.Common
                 return x;
             }
         }
+        public int InsertNotAsync(string commandText)
+        {
+            DbCommand cmd = dbConn.CreateCommand();
+            if (dbConn.State == ConnectionState.Closed)
+            {
+                dbConn.Open();
+            }
+
+            cmd.CommandText = commandText;
+
+            DbDataAdapter adapter = SEPDataAdapter.Instance(provider).CreateDataAdapter();
+            adapter.InsertCommand = cmd;
+            int x = adapter.InsertCommand.ExecuteNonQuery();
+
+            dbConn.Close();
+            return x;
+        }
         public async Task<int> Update(string commandText)
         {
             using (DbCommand cmd = dbConn.CreateCommand())
@@ -162,7 +179,11 @@ namespace SEP.Data.Common
             cmd.CommandText = commandText;
             try
             {
-                cmd.ExecuteScalar();
+                if (cmd.ExecuteScalar() == null)
+                {
+                    dbConn.Close();
+                    return false;
+                }
                 dbConn.Close();
                 return true;
             }

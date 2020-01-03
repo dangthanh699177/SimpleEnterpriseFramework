@@ -46,7 +46,7 @@ namespace SEP.Authentication
         private void btnExit_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.None;
-            Application.Exit();
+            this.Close();
         }
         private void btnLogin_Click(object sender, EventArgs e)
         {
@@ -75,40 +75,41 @@ namespace SEP.Authentication
         
         private void LoginForm_Load(object sender, EventArgs e)
         {
-            this.tbUsername.KeyDown += TbUsername_KeyDown;
-            this.tbPassword.KeyDown += TbPassword_KeyDown;
+            //this.tbUsername.KeyDown += TbUsername_KeyDown;
+            //this.tbPassword.KeyDown += TbPassword_KeyDown;
         }
 
         private void TbPassword_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
-            {
-                if (this.tbUsername.Text != String.Empty && this.tbPassword.Text != String.Empty)
-                {
-                    btnLogin_Click(sender, e);
-                }
-            }
+            //if (e.KeyCode == Keys.Enter)
+            //{
+            //    if (this.tbUsername.Text != String.Empty && this.tbPassword.Text != String.Empty)
+            //    {
+            //        btnLogin_Click(sender, e);
+            //    }
+            //}
         }
         private void TbUsername_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
-            {
-                if (this.tbUsername.Text != String.Empty && this.tbPassword.Text != String.Empty)
-                {
-                    btnLogin_Click(sender, e);
-                }
-            }
-            else if (e.KeyCode == Keys.Return)
-            {
-                btnExit_Click(sender, e);
-            }
+            //if (e.KeyCode == Keys.Enter)
+            //{
+            //    if (this.tbUsername.Text != String.Empty && this.tbPassword.Text != String.Empty)
+            //    {
+            //        btnLogin_Click(sender, e);
+            //    }
+            //}
+            //else if (e.KeyCode == Keys.Return)
+            //{
+            //    btnExit_Click(sender, e);
+            //}
         }
         
         private void lblRegister_Click(object sender, EventArgs e)
         {
             RegisterForm frmRegister = new RegisterForm(this.SepConn, this.SepProvider, Helper.GetEncrytpType(Helper.CryptType.Base64));
+            this.Hide();
             frmRegister.ShowDialog();
-            this.Close();
+            this.DialogResult = DialogResult.OK;
         }
         private void lblRegister_MouseEnter(object sender, EventArgs e)
         {

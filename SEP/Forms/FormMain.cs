@@ -27,45 +27,43 @@ namespace SEP.Forms
         string tableName = String.Empty;
         bool dontRunHandler = true;
 
-        public void Run()
+        public bool Run()
         {
             InitializeComponent();
             DataSource.AddStandardDataSources(dcd);
 
-            if (DataConnectionDialog.Show(dcd) == DialogResult.None)
+            if (DataConnectionDialog.Show(dcd) == DialogResult.OK)
             {
-                Application.Exit();
+                sepProvider = SEPDataProvider.Instance;
+                sepProvider.SetName(dcd.SelectedDataProvider.Name);
+                sepConn = SEPConnection.Instance;
+                sepConn.SetPath(dcd.ConnectionString);
+                query = Query.Instance;
+                cmd = SEPCommand.Instance(sepConn, sepProvider);
+
+                LoginForm frmLogin = new LoginForm(sepConn, sepProvider, Helper.GetEncrytpType(Helper.CryptType.Base64));
+
+                if (frmLogin.ShowDialog() == DialogResult.OK)
+                {
+                    // get list name of tables in database
+                    this.cbbTableName.DataSource = this.cmd.GetListTableName();
+
+                    // set default for combobox
+                    this.cbbTableName.SelectedIndex = 0;
+
+                    // view DataTable with BindingSource
+                    tableName = this.cbbTableName.SelectedItem.ToString();
+                    commandText = query.Select(tableName);
+                    bs.DataSource = cmd.GetTable(commandText);
+                    this.dgvDataTable.DataSource = bs.DataSource;
+
+                    // hidden id column
+                    this.dgvDataTable.Columns[0].Visible = false;
+                    this.Show();
+                    return true;
+                }
             }
-
-            sepProvider = SEPDataProvider.Instance;
-            sepProvider.SetName(dcd.SelectedDataProvider.Name);
-            sepConn = SEPConnection.Instance;
-            sepConn.SetPath(dcd.ConnectionString);
-            query = Query.Instance;
-            cmd = SEPCommand.Instance(sepConn, sepProvider);
-
-            LoginForm frmLogin = new LoginForm(sepConn, sepProvider, Helper.GetEncrytpType(Helper.CryptType.Base64));
-
-            if (frmLogin.ShowDialog() == DialogResult.None)
-            {
-                Application.Exit();
-            }
-
-            // get list name of tables in database
-            this.cbbTableName.DataSource = this.cmd.GetListTableName();
-
-            // set default for combobox
-            this.cbbTableName.SelectedIndex = 0;
-
-            // view DataTable with BindingSource
-            tableName = this.cbbTableName.SelectedItem.ToString();
-            commandText = query.Select(tableName);
-            bs.DataSource = cmd.GetTable(commandText);
-            this.dgvDataTable.DataSource = bs.DataSource;
-
-            // hidden id column
-            this.dgvDataTable.Columns[0].Visible = false;
-            this.Show();
+            return false;
         }
         
         private void cbbTableName_SelectedIndexChanged(object sender, EventArgs e)

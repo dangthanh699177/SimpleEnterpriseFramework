@@ -95,7 +95,7 @@ namespace SEP.Data.Utilities
                 if (item.Key.GetType() == typeof(string))
                     lCon.Append($"{item.Key} = N'{item.Value}'");
                 else
-                    lCon.Append($"{item.Key} = {item.Value}");
+                    lCon.Append($"{item.Key} = '{item.Value}'");
 
                 lCon.Append(" and ");
             }

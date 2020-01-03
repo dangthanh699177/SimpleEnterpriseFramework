@@ -21,9 +21,10 @@ namespace DemoForm
 
             var container = ContainerConfig.Configure();
             var scope = container.BeginLifetimeScope();
-            scope.Resolve<IApp>().Run();
-
-            Application.Run();
+            if (scope.Resolve<IApp>().Run())
+                Application.Run();
+            else
+                Application.Exit();
         }
     }
 }

@@ -11,9 +11,9 @@ namespace SEP
             _frmMain = frmMain;
         }
 
-        public void Run()
+        public bool Run()
         {
-            _frmMain.Run();
+            return _frmMain.Run();
         }
     }
 }

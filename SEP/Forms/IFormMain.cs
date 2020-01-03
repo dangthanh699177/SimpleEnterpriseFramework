@@ -9,6 +9,6 @@ namespace SEP.Forms
     {
         void ConvertToDataRow(DataRow row, ISEPDataRow sepRow);
         void ConvertToDataRowView(DataRowView rowView, ISEPDataRow sepRow);
-        void Run();
+        bool Run();
     }
 }
