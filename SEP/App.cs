@@ -1,6 +1,6 @@
 ﻿using SEP.Forms;
 
-namespace DemoForm
+namespace SEP
 {
     public class App : IApp
     {

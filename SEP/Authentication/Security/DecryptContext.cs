@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace SEP.Authentication.Security
 {
-    public class Decrypt
+    public class DecryptContext
     {
         private IDecrypt strategy;
-        public Decrypt()
+        public DecryptContext()
         {
             this.strategy = null;
         }

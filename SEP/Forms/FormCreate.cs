@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace SEP.Forms
 {
-    public partial class FormCreate : FormBase, IFormCreate
+    public partial class FormCreate : FormBase
     {
         public FormCreate(ISEPDataRow row) :base(row)
         {

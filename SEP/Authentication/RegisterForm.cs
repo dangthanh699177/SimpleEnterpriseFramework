@@ -11,15 +11,17 @@ namespace SEP.Authentication
     {
         public ISEPConnection SepConn { get; }
         public ISEPDataProvider SepProvider { get; }
+        public EncryptContext Encrypt { get; }
 
         public RegisterForm()
         {
             InitializeComponent();
         }
-        public RegisterForm(ISEPConnection sepConn, ISEPDataProvider sepProvider)
+        public RegisterForm(ISEPConnection sepConn, ISEPDataProvider sepProvider, EncryptContext encrypt)
         {
             SepConn = sepConn;
             SepProvider = sepProvider;
+            Encrypt = encrypt;
             InitializeComponent();
         }
 
@@ -69,14 +71,12 @@ namespace SEP.Authentication
         {
             IQuery query = Query.Instance;
             ISEPCommand command = SEPCommand.Instance(this.SepConn, this.SepProvider);
-            Encrypt encrypt = new Encrypt();
             UserAccount u = new UserAccount();
 
             u.FirstName = this.tbFirstName.Text.Trim();
             u.LastName = this.tbLastName.Text.Trim();
             u.Username = this.tbUsername.Text.Trim();
-            encrypt.SetEncrypt(new Base64Encrypt());
-            u.Password = encrypt.Encode(this.tbPassword.Text.Trim());   // manipulate strategy design pattern
+            u.Password = Encrypt.Encode(this.tbPassword.Text.Trim());   // manipulate strategy design pattern
 
             string commandText = query.Insert("UserAccount", u);
             

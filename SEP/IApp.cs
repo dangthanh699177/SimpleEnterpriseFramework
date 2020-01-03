@@ -1,4 +1,4 @@
-﻿namespace DemoForm
+﻿namespace SEP
 {
     public interface IApp
     {

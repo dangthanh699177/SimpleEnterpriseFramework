@@ -13,28 +13,23 @@ namespace SEP.Forms
 {
     public abstract partial class FormBase : Form, IFormBase
     {
-        // some properties
         protected ISEPDataRow row = null;
         protected ISEPDataRow listTextBox = new SEPDataRow();
         protected int y = 20;
-
-        // some Events
+        
         public delegate void FormHandler(ISEPDataRow row);
         public event FormHandler OnHandle = null;
-
-        // some constructors
+        
         public FormBase()
         {
             InitializeComponent();
         }
-
         public FormBase(ISEPDataRow dRow)
         {
             this.row = dRow;
             InitializeComponent();
         }
-
-        // some definitions
+        
         public void InitializeFormContent(string frmName, string btnName)
         {
             this.Text = frmName;
@@ -42,7 +37,6 @@ namespace SEP.Forms
 
             InitializeInputScope();
         }
-
         public void InitializeInputScope()
         {
             Label lb = null;
@@ -96,7 +90,6 @@ namespace SEP.Forms
             }
             
         }
-
         public virtual string InitTextBoxContent(object value)
         {
             throw new NotImplementedException();
@@ -106,7 +99,6 @@ namespace SEP.Forms
         {
             this.Close();
         }
-
         public void button1_Click(object sender, EventArgs e)
         {
             foreach (KeyValuePair<string, object> item in this.listTextBox.Dictionary)
@@ -119,6 +111,5 @@ namespace SEP.Forms
                 OnHandle(row);
             }
         }
-        
     }
 }

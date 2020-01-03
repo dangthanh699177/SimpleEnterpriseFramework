@@ -52,20 +52,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App.cs" />
     <Compile Include="Authentication\Security\Base64Decrypt.cs" />
     <Compile Include="Authentication\Security\Base64Encrypt.cs" />
-    <Compile Include="Authentication\Security\Decrypt.cs" />
-    <Compile Include="Authentication\Security\Encrypt.cs" />
+    <Compile Include="Authentication\Security\DecryptContext.cs" />
+    <Compile Include="Authentication\Security\EncryptContext.cs" />
     <Compile Include="Authentication\Security\IDecrypt.cs" />
     <Compile Include="Authentication\Security\IEncrypt.cs" />
     <Compile Include="Authentication\Security\Sha256Decrypt.cs" />
     <Compile Include="Authentication\Security\Sha256Encrypt.cs" />
     <Compile Include="Authentication\UserAccount.cs" />
+    <Compile Include="ContainerConfig.cs" />
     <Compile Include="Data\Client\ISEPConnection.cs" />
     <Compile Include="Data\Common\ISEPCommand.cs" />
     <Compile Include="Data\Common\ISEPDataAdapter.cs" />
     <Compile Include="Data\Common\ISEPDataProvider.cs" />
     <Compile Include="Data\Common\ISEPDataRow.cs" />
+    <Compile Include="Data\Utilities\Condition.cs" />
     <Compile Include="Data\Utilities\IQuery.cs" />
     <Compile Include="Data\Utilities\IQueryHelper.cs" />
     <Compile Include="Data\Utilities\QueryHelper.cs" />
@@ -110,6 +113,7 @@
     <Compile Include="Forms\IFormMain.cs" />
     <Compile Include="Forms\IFormUpdate.cs" />
     <Compile Include="Helper.cs" />
+    <Compile Include="IApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Forms\FormUpdate.cs">
       <SubType>Form</SubType>

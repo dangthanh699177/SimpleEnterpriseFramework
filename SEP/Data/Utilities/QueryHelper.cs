@@ -13,19 +13,7 @@ namespace SEP.Data.Utilities
         {
             this.sepRow = sepRow;
         }
-
-        public class Condition
-        {
-            public string Name { get; set; }
-            public string Value { get; set; }
-
-            public Condition(string name, string value)
-            {
-                this.Name = name;
-                this.Value = value;
-            }
-        }
-
+        
         // 2 function below is to use for Insert Command:
         // insert into table_name (...) values (...)
 

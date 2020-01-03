@@ -4,7 +4,7 @@ namespace SEP.Data.Utilities
 {
     public interface IQueryHelper
     {
-        QueryHelper.Condition GetID();
+        Condition GetID();
         bool CheckID(KeyValuePair<string, object> item);
         string GetCondition();
         string GetEntity();

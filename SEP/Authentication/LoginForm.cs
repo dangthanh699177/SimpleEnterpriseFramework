@@ -13,18 +13,20 @@ namespace SEP.Authentication
     {
         public ISEPConnection SepConn { get; }
         public ISEPDataProvider SepProvider { get; }
+        public EncryptContext Encrypt { get; }
 
         public LoginForm()
         {
             InitializeComponent();
         }
 
-        public LoginForm(ISEPConnection sepConn, ISEPDataProvider sepProvider)
+        public LoginForm(ISEPConnection sepConn, ISEPDataProvider sepProvider, EncryptContext encrypt)
         {
             InitTableAccount(sepConn, sepProvider);
             InitializeComponent();
             SepConn = sepConn;
             SepProvider = sepProvider;
+            Encrypt = encrypt;
         }
 
         private void InitTableAccount(ISEPConnection sepConn, ISEPDataProvider sepProvider)
@@ -39,7 +41,6 @@ namespace SEP.Authentication
                     MessageBox.Show("Cannot create table: UserAccount", "Notification", MessageBoxButtons.OK);
                 }
             }
-            //List<ISEPDataRow> list = command.ExecuteReader(query.Select("UserAccount"));
         }
         
         private void btnExit_Click(object sender, EventArgs e)
@@ -49,11 +50,6 @@ namespace SEP.Authentication
         }
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            // encrypt password
-            Encrypt encrypt = new Encrypt();
-            encrypt.SetEncrypt(new Base64Encrypt());
-            string pass = encrypt.Encode(this.tbPassword.Text);
-
             // fetch datatable from database
             string commandText = Query.Instance.Select("UserAccount");
             ISEPCommand command = SEPCommand.Instance(this.SepConn, this.SepProvider);
@@ -62,7 +58,7 @@ namespace SEP.Authentication
             foreach(DataRow row in dt.Rows)
             {
                 if (this.tbUsername.Text == row["Username"].ToString() &&
-                    pass == row["Password"].ToString())
+                    Encrypt.Encode(this.tbPassword.Text) == row["Password"].ToString())
                 {
                     this.DialogResult = DialogResult.OK;
                     return;
@@ -110,7 +106,7 @@ namespace SEP.Authentication
         
         private void lblRegister_Click(object sender, EventArgs e)
         {
-            RegisterForm frmRegister = new RegisterForm(this.SepConn, this.SepProvider);
+            RegisterForm frmRegister = new RegisterForm(this.SepConn, this.SepProvider, Helper.GetEncrytpType(Helper.CryptType.Base64));
             frmRegister.ShowDialog();
             this.Close();
         }

@@ -2,7 +2,7 @@
 
 namespace SEP.Forms
 {
-    public partial class FormUpdate : FormBase, IFormUpdate
+    public partial class FormUpdate : FormBase
     {
         public FormUpdate(ISEPDataRow row) : base(row)
         {
