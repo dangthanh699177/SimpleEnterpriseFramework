@@ -34,7 +34,7 @@ namespace SEP.Authentication
             ISEPCommand command = SEPCommand.Instance(sepConn, sepProvider);
             IQuery query = Query.Instance;
 
-            if (command.ExecuteCommand(query.Select("UserAccount")) == false)
+            if (command.ExecuteCommand(query.Select("Username", "UserAccount", new Condition("Username", "itcui"))) == false)
             {
                 if (command.ExecuteCommand(query.CreateTable("UserAccount")) == false)
                 {
